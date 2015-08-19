@@ -27,9 +27,6 @@ MAXMIND_PRODUCT_IDS=("173" "121" "111")
 SNS_NOTIFICATION_TOPIC=""
 
 #script starts below
-export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
 
 for i in "${MAXMIND_PRODUCT_IDS[@]}"
 do
@@ -46,9 +43,9 @@ find . -name '*.tar.gz' -print0 | xargs -0 -I {} tar -zxvf {} --strip-components
 rm -f *.tar.gz 
 
 #sync to aws bucket
-aws s3 sync databases $DEST_BUCKET_PATH
+AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY aws s3 sync databases $DEST_BUCKET_PATH
 
 #send SNS notification
-aws sns publish --topic-arn $SNS_NOTIFICATION_TOPIC --message "Naxmind update complete!"
+AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY aws sns publish --topic-arn $SNS_NOTIFICATION_TOPIC --message "Maxmind update complete!"
 
 exit 0
